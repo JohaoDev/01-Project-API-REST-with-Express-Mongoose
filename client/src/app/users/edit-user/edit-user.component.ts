@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 
 import { CrudService } from '../../services/crud.service';
 
-export interface UserData {
-  data: {
-    name: string;
-    lastname: string;
-    age: number;
-    email: string;
-    password: string;
-  };
-}
+// export interface UserData {
+//   data: {
+//     name: string;
+//     lastname: string;
+//     age: number;
+//     email: string;
+//     password: string;
+//   };
+// }
 
 @Component({
   selector: 'app-edit-user',

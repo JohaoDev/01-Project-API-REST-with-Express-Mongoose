@@ -42,14 +42,14 @@ export class UsersComponent implements OnInit {
       });
   }
 
-  _deleteuser(_id) {
+  delete(_id) {
     this.crudService.deleteData('user', _id);
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/users']);
     });
   }
 
-  private _edit(userData): void {
+  edit(userData): void {
     localStorage.setItem('userData', JSON.stringify(userData));
     this.router.navigate(['/users/edit']);
   }
