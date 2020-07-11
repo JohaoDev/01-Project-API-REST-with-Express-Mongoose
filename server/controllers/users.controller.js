@@ -31,6 +31,7 @@ let getUserByID = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -51,6 +52,7 @@ let getUserByName = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -92,6 +94,7 @@ let postUsers = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -113,6 +116,7 @@ let patchUser = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -133,6 +137,7 @@ let deleteUser = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -152,11 +157,17 @@ let loginUsers = (req, res) => {
   User.find({ email })
     .then((data) => {
       if (data[0].email === email) {
-        let token;
+        let token,
+          tokenBody = {
+            name: data[0].name,
+            email: data[0].email,
+            role: data[0].role,
+            sessionID: data[0].sessionID,
+          };
         bcrypt.compareSync(password, data[0].password)
-          ? ((token = jwt.sign({ data: data[0] }, req.sessionID, {
+          ? ((token = jwt.sign({ data: tokenBody }, process.env.KEY_JWT, {
               algorithm: "HS256",
-              expiresIn: 120,
+              expiresIn: 300,
             })),
             res.status(200).json({
               ok: true,

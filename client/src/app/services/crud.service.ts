@@ -18,7 +18,23 @@ export class CrudService {
     this.url = this.server.getUrl();
   }
 
-  post(dataSend: object, endPoint: string): Array<any> {
+  getAllData(endPoint: string): Array<any> {
+    let returnData: Array<any> = [];
+
+    this.http
+      .get<DataRx>(`${this.url}${endPoint}`, this.server.getHeaders())
+      .subscribe((data) => {
+        if (data.ok) {
+          returnData = data.data;
+          this.permissions.decodeToken(data.token);
+        } else {
+          alert(data.msg);
+        }
+      });
+    return returnData;
+  }
+
+  postData(dataSend: object, endPoint: string): Array<any> {
     let returnData: Array<any> = [];
     this.http
       .post<DataRx>(
@@ -27,7 +43,6 @@ export class CrudService {
         this.server.getHeaders()
       )
       .subscribe((data) => {
-        console.log(data);
         if (data.ok) {
           returnData = data.data;
           this.permissions.decodeToken(data.token);
@@ -38,10 +53,29 @@ export class CrudService {
     return returnData;
   }
 
-  getUsers(): Array<any> {
+  // getByID(id: string): Array<any> {
+  //   let returnData: Array<any> = [];
+  //   this.http
+  //     .get<DataRx>(`${this.url}user/${id}`, this.server.getHeaders())
+  //     .subscribe((data) => {
+  //       if (data.ok) {
+  //         returnData = data.data;
+  //         this.permissions.decodeToken(data.token);
+  //       } else {
+  //         alert(data.msg);
+  //       }
+  //     });
+  //   return returnData;
+  // }
+
+  patchData(dataSend: object, endPoint: string, id: string): Array<any> {
     let returnData: Array<any> = [];
     this.http
-      .get<DataRx>(`${this.url}users`, this.server.getHeaders())
+      .patch<DataRx>(
+        `${this.url}${endPoint}/${id}`,
+        dataSend,
+        this.server.getHeaders()
+      )
       .subscribe((data) => {
         if (data.ok) {
           returnData = data.data;
@@ -53,10 +87,10 @@ export class CrudService {
     return returnData;
   }
 
-  getUser(id: string): Array<any> {
+  deleteData(endPoint: string, id: string): Array<any> {
     let returnData: Array<any> = [];
     this.http
-      .get<DataRx>(`${this.url}user/${id}`, this.server.getHeaders())
+      .delete<DataRx>(`${this.url}${endPoint}/${id}`, this.server.getHeaders())
       .subscribe((data) => {
         if (data.ok) {
           returnData = data.data;

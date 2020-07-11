@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
         if (res.ok) {
           if (this.permissions.decodeToken(res.token)) {
             this.router.navigate(['/home']);
-            console.log(this.permissions.getUserLogin());
+            // console.log(this.permissions.getUserLogin());
           }
         } else {
           this.dataLogin.data.email = '';

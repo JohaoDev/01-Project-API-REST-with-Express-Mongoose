@@ -9,8 +9,8 @@ let api = express.Router(),
 // galleryMiddleware = multiParty({ uploadDir: "./files/gallery" });
 
 //users ENDPOINT
-api.get("/users", userController.getUsers);
-api.get("/users/:name", userController.getUserByName);
+api.get("/users", authController.auth, userController.getUsers);
+api.get("/users/:name", authController.auth, userController.getUserByName);
 api.get(
   "/user/:id",
   [authController.auth, roleController.adminRol],
@@ -18,11 +18,11 @@ api.get(
 );
 
 api.post("/user", passwordController.encodePassword, userController.postUser);
-api.post("/users", userController.postUsers);
+// api.post("/users", userController.postUsers);
 api.post("/login", userController.loginUsers);
 
-api.patch("/user/:id", userController.patchUser);
+api.patch("/user/:id", authController.auth, userController.patchUser);
 
-api.delete("/user/:id", userController.deleteUser);
+api.delete("/user/:id", authController.auth, userController.deleteUser);
 
 module.exports = api;
