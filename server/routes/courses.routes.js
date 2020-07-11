@@ -1,16 +1,17 @@
 const express = require("express");
 
 let api = express.Router(),
-  courseController = require("../controllers/courses.controller");
+  courseController = require("../controllers/courses.controller"),
+  authController = require("../controllers/middlewares/auth.controller");
 
 //users ENDPOINT
-api.get("/courses", courseController.get);
-api.get("/course/:_id", courseController.getByID);
+api.get("/courses", authController.auth, courseController.get);
+api.get("/course/:_id", authController.auth, courseController.getByID);
 
-api.post("/course", courseController.post);
+api.post("/course", authController.auth, courseController.post);
 
-api.patch("/course/:_id", courseController.patch);
+api.patch("/course/:_id", authController.auth, courseController.patch);
 
-api.delete("/course/:_id", courseController.deleteOne);
+api.delete("/course/:_id", authController.auth, courseController.deleteOne);
 
 module.exports = api;

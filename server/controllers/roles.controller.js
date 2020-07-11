@@ -28,6 +28,7 @@ let getByID = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -48,6 +49,7 @@ let post = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -63,12 +65,13 @@ let patch = (req, res) => {
   let { _id } = req.params,
     { data } = req.body;
 
-  Role.findOneAndUpdate({ _id }, { $set: data })
+  Role.updateOne({ _id }, { $set: data })
     .then((data) => {
       res.status(200).json({
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
@@ -89,6 +92,7 @@ let deleteOne = (req, res) => {
         ok: true,
         data: data,
         msg: "ready",
+        token: req.token,
       });
     })
     .catch((err) => {
