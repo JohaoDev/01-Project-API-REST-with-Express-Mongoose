@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 
 import { CrudService } from '../../services/crud.service';
 
-export interface RoleData {
-  data: {
-    name: string;
-    description: string;
-  };
-}
+// export interface RoleData {
+//   data: {
+//     name: string;
+//     description: string;
+//   };
+// }
 
 @Component({
   selector: 'app-edit-role',

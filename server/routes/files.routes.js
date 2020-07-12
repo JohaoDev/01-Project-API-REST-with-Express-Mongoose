@@ -2,6 +2,7 @@ const express = require("express"),
   multiParty = require("connect-multiparty");
 
 let api = express.Router(),
+  authController = require("../controllers/middlewares/auth.controller"),
   filesController = require("../controllers/files.controller"),
   galleryMiddleware = multiParty({ uploadDir: "./files/gallery" }),
   videosMiddleware = multiParty({ uploadDir: "./files/videos" }),
@@ -10,7 +11,12 @@ let api = express.Router(),
 //files ENDPOINT
 api.get("/files/:directory/:urlFile", filesController.showFiles);
 
-api.post("/files_gallery", galleryMiddleware, filesController.uploadFile);
+api.post(
+  "/files_gallery",
+  authController.auth,
+  galleryMiddleware,
+  filesController.uploadFile
+);
 api.post("/files_videos", videosMiddleware, filesController.uploadFile);
 api.post("/files_pdfs", pdfMiddleware, filesController.uploadFile);
 

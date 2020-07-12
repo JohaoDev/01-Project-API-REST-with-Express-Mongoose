@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { CrudService } from '../../services/crud.service';
+import { FilesService } from '../../services/files.service.js';
+import { DataRx } from 'src/app/models/data-rx';
 
 export interface UserData {
   data: {
@@ -12,6 +14,7 @@ export interface UserData {
     age: number;
     email: string;
     password: string;
+    profile_pic: string;
   };
 }
 
@@ -23,11 +26,13 @@ export interface UserData {
 export class NewUserComponent implements OnInit {
   createUserForm: FormGroup;
   dataUser: UserData;
+  seeFile: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private crudService: CrudService,
-    private router: Router
+    private router: Router,
+    private filesService: FilesService
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +47,12 @@ export class NewUserComponent implements OnInit {
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]],
+      profile_pic: ['', [Validators.required]],
     });
+    this.seeFile = this.filesService.getFile(
+      'gallery',
+      '-eA01tmXbMq5RdY6S1Af-jJf.jpeg'
+    );
   };
 
   registerUser(): void {
@@ -53,6 +63,7 @@ export class NewUserComponent implements OnInit {
         age: this.createUserForm.get('age').value,
         email: this.createUserForm.get('email').value,
         password: this.createUserForm.get('password').value,
+        profile_pic: this.createUserForm.get('profile_pic').value,
       },
     };
 
@@ -84,5 +95,24 @@ export class NewUserComponent implements OnInit {
         timer: 2000,
       });
     }
+  }
+
+  sendFile(event): void {
+    let pic = this.createUserForm.get('profile_pic').value;
+
+    if (pic !== '-eA01tmXbMq5RdY6S1Af-jJf.jpeg') {
+      this.filesService.deleteFile('gallery', pic);
+    }
+
+    const file = event.target.files;
+    // console.log(file);
+
+    this.filesService.saveFile(file).subscribe((res: DataRx) => {
+      // console.log(res);
+      if (res.ok) {
+        pic = res.data[0];
+        this.seeFile = this.filesService.getFile('gallery', pic);
+      }
+    });
   }
 }

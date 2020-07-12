@@ -3,16 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { CrudService } from '../../services/crud.service';
-
-// export interface UserData {
-//   data: {
-//     name: string;
-//     lastname: string;
-//     age: number;
-//     email: string;
-//     password: string;
-//   };
-// }
+import { FilesService } from '../../services/files.service.js';
+import { DataRx } from 'src/app/models/data-rx';
 
 @Component({
   selector: 'app-edit-user',
@@ -22,16 +14,22 @@ import { CrudService } from '../../services/crud.service';
 export class EditUserComponent implements OnInit {
   editUserForm: FormGroup;
   userData: any;
+  seeFile: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private crudService: CrudService,
-    private router: Router
+    private router: Router,
+    private filesService: FilesService
   ) {}
 
   ngOnInit(): void {
     this._getUserData();
     this._editUserForm();
+    this.seeFile = this.filesService.getFile(
+      'gallery',
+      this.userData.profile_pic
+    );
   }
 
   private _getUserData() {
@@ -45,6 +43,7 @@ export class EditUserComponent implements OnInit {
       age: [this.userData.age, [Validators.required]],
       email: [this.userData.email, [Validators.required]],
       password: [this.userData.password, [Validators.required]],
+      profile_pic: [this.userData.profile_pic, [Validators.required]],
     });
   };
 
@@ -56,6 +55,7 @@ export class EditUserComponent implements OnInit {
         age: this.editUserForm.get('age').value,
         email: this.editUserForm.get('email').value,
         password: this.editUserForm.get('password').value,
+        profile_pic: this.editUserForm.get('profile_pic').value,
       },
     };
 
@@ -69,5 +69,24 @@ export class EditUserComponent implements OnInit {
       this.router.navigate(['/users']);
       localStorage.clear();
     }
+  }
+
+  sendFile(event): void {
+    let pic = this.editUserForm.get('profile_pic').value;
+
+    if (pic !== '-eA01tmXbMq5RdY6S1Af-jJf.jpeg') {
+      this.filesService.deleteFile('gallery', pic);
+    }
+
+    const file = event.target.files;
+    // console.log(file);
+
+    this.filesService.saveFile(file).subscribe((res: DataRx) => {
+      // console.log(res);
+      if (res.ok) {
+        pic = res.data[0];
+        this.seeFile = this.filesService.getFile('gallery', pic);
+      }
+    });
   }
 }
