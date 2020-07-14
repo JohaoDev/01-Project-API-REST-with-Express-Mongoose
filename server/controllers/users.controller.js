@@ -156,7 +156,6 @@ let loginUsers = (req, res) => {
 
   User.find({ email })
     .then((data) => {
-      if (data[0].email === email) {
         let token,
           tokenBody = {
             name: data[0].name,
@@ -164,6 +163,7 @@ let loginUsers = (req, res) => {
             role: data[0].role,
             sessionID: data[0].sessionID,
           };
+
         bcrypt.compareSync(password, data[0].password)
           ? ((token = jwt.sign({ data: tokenBody }, process.env.KEY_JWT, {
               algorithm: "HS256",
@@ -181,7 +181,6 @@ let loginUsers = (req, res) => {
               msg: "Incorrect password",
               token: null,
             });
-      }
     })
     .catch((err) => {
       res.status(404).json({

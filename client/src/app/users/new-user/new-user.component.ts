@@ -37,6 +37,10 @@ export class NewUserComponent implements OnInit {
 
   ngOnInit(): void {
     this._createUserForm();
+    this.seeFile = this.filesService.getFile(
+      'gallery',
+      '-eA01tmXbMq5RdY6S1Af-jJf.jpeg'
+    );
   }
 
   _createUserForm = () => {
@@ -49,10 +53,6 @@ export class NewUserComponent implements OnInit {
       confirmPassword: ['', [Validators.required]],
       profile_pic: ['', [Validators.required]],
     });
-    this.seeFile = this.filesService.getFile(
-      'gallery',
-      '-eA01tmXbMq5RdY6S1Af-jJf.jpeg'
-    );
   };
 
   registerUser(): void {
