@@ -32,12 +32,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this._loginForm();
-    this.dataLogin = {
-      data: {
-        email: this.loginForm.get('email').value,
-        password: this.loginForm.get('password').value,
-      },
-    };
   }
 
   _loginForm = () => {
@@ -48,12 +42,19 @@ export class LoginComponent implements OnInit {
   };
 
   login(): void {
+    this.dataLogin = {
+      data: {
+        email: this.loginForm.get('email').value,
+        password: this.loginForm.get('password').value,
+      },
+    };
+
     this.loginService.logIn(this.dataLogin).subscribe(
       (res: DataRx) => {
         if (res.ok) {
           if (this.permissions.decodeToken(res.token)) {
             this.router.navigate(['/home']);
-            // console.log(this.permissions.getUserLogin());
+            console.log(this.permissions.getUserLogin());
           }
         } else {
           this.dataLogin.data.email = '';

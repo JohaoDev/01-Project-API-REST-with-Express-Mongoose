@@ -37,10 +37,7 @@ export class NewUserComponent implements OnInit {
 
   ngOnInit(): void {
     this._createUserForm();
-    this.seeFile = this.filesService.getFile(
-      'gallery',
-      '-eA01tmXbMq5RdY6S1Af-jJf.jpeg'
-    );
+    this.seeFile = this.filesService.getFile('gallery', 'defaultPIC.png');
   }
 
   _createUserForm = () => {
@@ -100,12 +97,12 @@ export class NewUserComponent implements OnInit {
   sendFile(event): void {
     let pic = this.createUserForm.get('profile_pic').value;
 
-    if (pic !== '-eA01tmXbMq5RdY6S1Af-jJf.jpeg') {
+    if (pic !== 'defaultPIC.png') {
       this.filesService.deleteFile('gallery', pic);
     }
 
     const file = event.target.files;
-    // console.log(file);
+    console.log(file);
 
     this.filesService.saveFile(file).subscribe((res: DataRx) => {
       // console.log(res);
