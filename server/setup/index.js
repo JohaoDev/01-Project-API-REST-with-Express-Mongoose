@@ -7,3 +7,4 @@ app.listen(port, (err) => {
     ? console.log(`The service is running at http://localhost:${port}/`)
     : console.log(`the service is not working`);
 });
+
